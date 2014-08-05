@@ -6,28 +6,57 @@
 </head>
 <body>
   <h1>Todo List</h1>
-  <div>flashMessage</div>
+  <div data-bind="text: flashMessage"></div>
 
   <h4>New Item</h4>
-  <input type="text" placeholder ="Add stuff">
-  <button>Add</button>
+  <p>Type the name of the thing you need to do and hit Enter</p>
+  <input type="text" data-bind="value: itemName, valueUpdate: 'afterkeydown', event: {keyup: addOnEnter}, hasFocus: isFocused" placeholder ="New item...">
 
   <h4>Things to do</h4>
-  <ul>
+  <ul data-bind="foreach: items">
     <li>
-      <span>name</span>
-      <button>remove</button>
+      <span data-bind="text: $data"></span>
+      <button data-bind="click: $parent.removeItem.bind($parent)">remove</button>
     </li>
   </ul>
+  <!-- ko if: items().length <= 0-->
+  <p>I've got nothing to do. Enjoy your time !</p>
+  <!-- /ko-->
 
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 <script>
   (function(){
    var TodoModelView = function() {
-    
+      this.items = ko.observableArray([]);
+      this.itemName = ko.observable('');
+      this.isFocused = ko.observable();
+      this.flashMessage = ko.observable('');
    }
-   })();
+
+   TodoModelView.prototype.addItem = function() {
+    this.items.push(this.itemName());
+    this.flashMessage('"' + this.itemName() + '" has been added to the list');
+    this.itemName('');
+    this.isFocused(true);
+   }
+
+   TodoModelView.prototype.removeItem = function(item) {
+    this.items.remove(item);
+    this.flashMessage('"' + item + '" has been removed from the list');
+   }
+
+   TodoModelView.prototype.addOnEnter = function(data, e) {
+    if (e.keyCode === 13) {
+      this.addItem();
+    }
+    if (e.keyCode === 27) {
+      this.itemName('');
+    }
+   }
+
+   ko.applyBindings(new TodoModelView());
+ })();
 </script>
 </body>
 </html>
