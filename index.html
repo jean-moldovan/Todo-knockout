@@ -5,7 +5,31 @@
   <title></title>
 </head>
 <body>
-test
+  <input type="text" data-bind="value: firstName, valueUpdate: 'afterkeydown'" placeholder="first name">
+  <input type="text" data-bind="value: lastName, valueUpdate: 'afterkeydown'" placeholder="last name">
+  <span data-bind="text: fullName"></span>
+  <div>
+    <button data-bind="click: clearAll">Clear</button>
+  </div>
+
 <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+<script>
+  (function(){
+    var PersonViewModel = function() {
+      this.firstName = ko.observable('');
+      this.lastName = ko.observable('');
+      this.fullName = ko.computed(function() {
+        return this.firstName() + ' ' + this.lastName();
+        }, this);
+    }
+
+    PersonViewModel.prototype.clearAll = function() {
+      this.firstName('');
+      this.lastName('');
+    }
+
+    ko.applyBindings(new PersonViewModel());
+   })();
+</script>
 </body>
 </html>
