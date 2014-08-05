@@ -8,20 +8,28 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
-        <h1>Todo List</h1>
-        <div data-bind="visible: flashMessage, text: flashMessage" class="alert"></div>
+      <div class="col-md-8 col-md-offset-2">
+        <div class="text-center">
+          <hr>
+          <div data-bind="visible: flashMessage, text: flashMessage, css: flashClass" class="alert"></div>
+          <h1>Todo List</h1>
 
-        <p>Type the name of the thing you need to do and hit Enter</p>
-        <input type="text" data-bind="value: itemName, valueUpdate: 'afterkeydown', event: {keyup: addOnEnter}, hasFocus: isFocused" placeholder ="New item...">
+          <p class="lead">Type the name of the thing you need to do and hit Enter</p>
+          <input class="form-control input-lg" type="text" data-bind="value: itemName, valueUpdate: 'afterkeydown', event: {keyup: addOnEnter}, hasFocus: isFocused" placeholder ="New item...">
+        </div>
+
+        <hr>
 
         <h3>Things to do</h3>
-        <ul data-bind="foreach: items">
+        <ol data-bind="foreach: items">
           <li>
             <span data-bind="text: $data"></span>
-            <button data-bind="click: $parent.removeItem.bind($parent)">remove</button>
+            <button class="close" data-bind="click: $parent.removeItem.bind($parent)">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Remove</span>
+            </button>
+            <span class="clearfix"></span>
           </li>
-        </ul>
+        </ol>
         <!-- ko if: items().length <= 0-->
         <p>I've got nothing to do. Enjoy your time !</p>
         <!-- /ko-->
@@ -37,11 +45,13 @@
       this.itemName = ko.observable('');
       this.isFocused = ko.observable();
       this.flashMessage = ko.observable('');
+      this.flashClass = ko.observable('');
    }
 
    TodoModelView.prototype.addItem = function() {
     this.items.push(this.itemName());
     this.flashMessage('"' + this.itemName() + '" has been added to the list');
+    this.flashClass('alert-success');
     this.itemName('');
     this.isFocused(true);
    }
@@ -49,6 +59,7 @@
    TodoModelView.prototype.removeItem = function(item) {
     this.items.remove(item);
     this.flashMessage('"' + item + '" has been removed from the list');
+    this.flashClass('alert-info');
    }
 
    TodoModelView.prototype.addOnEnter = function(data, e) {
