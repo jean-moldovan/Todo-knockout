@@ -1,0 +1,30 @@
+body {
+  padding-top: 20px;
+  background-color: #FBF5EF;
+}
+
+.todo-app {
+  border: 2px solid orange;
+  background-color: #fafafa;
+  border: 1px solid #cecece;
+  border-radius: 6px;
+  box-shadow: 0 0 7px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.todo-list {
+  padding: 0 30px;
+  list-style: decimal inside;
+  font-size: 18px;
+  color: #666;
+  font-style: italic;
+}
+
+.todo-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.todo-list li:last-child {
+  border-bottom: none;
+}

@@ -3,36 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
   <title></title>
 </head>
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <div class="text-center">
+      <div class="col-md-6 col-md-offset-3">
+        <div data-bind="visible: flashMessage, text: flashMessage, css: flashClass" class="alert"></div>
+        <div class="todo-app">
+          <div class="text-center">
+            <h1>Todo List</h1>
+
+            <p class="lead">Type the name of the thing you need to do and hit Enter</p>
+            <input class="form-control input-lg" type="text" data-bind="value: itemName, valueUpdate: 'afterkeydown', event: {keyup: addOnEnter}, hasFocus: isFocused" placeholder ="New item...">
+          </div>
           <hr>
-          <div data-bind="visible: flashMessage, text: flashMessage, css: flashClass" class="alert"></div>
-          <h1>Todo List</h1>
 
-          <p class="lead">Type the name of the thing you need to do and hit Enter</p>
-          <input class="form-control input-lg" type="text" data-bind="value: itemName, valueUpdate: 'afterkeydown', event: {keyup: addOnEnter}, hasFocus: isFocused" placeholder ="New item...">
+          <h3>Things to do</h3>
+          <ol data-bind="foreach: items" class="todo-list">
+            <li>
+              <span data-bind="text: $data"></span>
+              <button class="close" data-bind="click: $parent.removeItem.bind($parent)">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Remove</span>
+              </button>
+              <span class="clearfix"></span>
+            </li>
+          </ol>
+          <!-- ko if: items().length <= 0-->
+          <p>You've got nothing to do</p>
+          <!-- /ko-->
         </div>
-
-        <hr>
-
-        <h3>Things to do</h3>
-        <ol data-bind="foreach: items">
-          <li>
-            <span data-bind="text: $data"></span>
-            <button class="close" data-bind="click: $parent.removeItem.bind($parent)">
-              <span aria-hidden="true">&times;</span><span class="sr-only">Remove</span>
-            </button>
-            <span class="clearfix"></span>
-          </li>
-        </ol>
-        <!-- ko if: items().length <= 0-->
-        <p>I've got nothing to do. Enjoy your time !</p>
-        <!-- /ko-->
       </div>
     </div>
   </div>
@@ -59,7 +60,7 @@
    TodoModelView.prototype.removeItem = function(item) {
     this.items.remove(item);
     this.flashMessage('"' + item + '" has been removed from the list');
-    this.flashClass('alert-info');
+    this.flashClass('alert-success');
    }
 
    TodoModelView.prototype.addOnEnter = function(data, e) {
