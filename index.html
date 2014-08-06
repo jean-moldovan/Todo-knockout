@@ -47,14 +47,38 @@
       this.isFocused = ko.observable();
       this.flashMessage = ko.observable('');
       this.flashClass = ko.observable('');
+      this.isValid = false;
+      this.isUnique = false;
+   }
+
+   TodoModelView.prototype.validate = function(name) {
+    return name.length > 0 ? true : false;
+   }
+
+   TodoModelView.prototype.findByName = function(name) {
+    var result = [],
+        items = this.items();
+
+    result = items.every(function(el) {
+      return el !== name;
+    });
+
+    return result;
    }
 
    TodoModelView.prototype.addItem = function() {
-    this.items.push(this.itemName());
-    this.flashMessage('"' + this.itemName() + '" has been added to the list');
-    this.flashClass('alert-success');
-    this.itemName('');
-    this.isFocused(true);
+    this.isValid = this.validate(this.itemName());
+    this.isUnique = this.findByName(this.itemName());
+    if (this.isValid && this.isUnique) {
+      this.items.push(this.itemName());
+      this.flashMessage('"' + this.itemName() + '" has been added to the list');
+      this.flashClass('alert-success');
+      this.itemName('');
+      this.isFocused(true);
+    } else {
+      this.flashMessage('Error ! Invalid input.');
+      this.flashClass('alert-danger');
+    }
    }
 
    TodoModelView.prototype.removeItem = function(item) {
